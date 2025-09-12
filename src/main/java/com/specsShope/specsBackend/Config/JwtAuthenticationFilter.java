@@ -50,9 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            System.out.println("🔍 Extracted JWT Token: " + token);
             String[] tokenParts = token.split("\\.");
-            System.out.println("🔍 Token Parts Count: " + tokenParts.length);
             if (jwtService.isTokenValid(token, userDetails)) {
                 // ✅ Extract authorities from token
                 Claims claims = Jwts.parserBuilder()
@@ -62,11 +60,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .getBody();
 
                 List<String> roles = claims.get("authorities", List.class);
-                System.out.println("🔍 Roles from JWT: " + roles);
                 Collection<? extends GrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-                System.out.println("🔍 Granted Authorities being set: " + authorities);
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
