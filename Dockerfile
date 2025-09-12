@@ -1,14 +1,20 @@
-# Use an official OpenJDK runtime as a base image
-FROM openjdk:17-jdk-slim
-
-# Set working directory inside the container
+# Stage 1: Build the JAR
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+RUN chmod +x mvnw
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
 
-# Copy the built jar file into the container
-COPY target/specsBackend-0.0.1-SNAPSHOT.jar app.jar
+# Stage 2: Run the app
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose port 8080 to the outside
+# Use Render dynamic port
+ENV SERVER_PORT=${PORT:-8080}
 EXPOSE 8080
 
-# Run the jar file
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
