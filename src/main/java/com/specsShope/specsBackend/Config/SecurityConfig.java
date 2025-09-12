@@ -101,6 +101,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/doctor-appointments/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/doctor-past-users/**").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
+                        .requestMatchers("/healthz").permitAll()
 
 
 

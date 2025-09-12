@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 public class SelfPingScheduler {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String appUrl = "https://your-backend-url.onrender.com/healthz"; // <-- replace with your Render URL
+    private final String appUrl = "https://careoptics-backend.onrender.com/healthz"; // <-- replace with your Render URL
 
     // Every 10 minutes (600000 ms)
     @Scheduled(fixedRate = 600_000)
