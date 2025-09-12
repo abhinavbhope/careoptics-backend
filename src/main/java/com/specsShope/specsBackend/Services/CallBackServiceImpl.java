@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 
+
 @Slf4j
 public class CallBackServiceImpl implements CallbackRequestService {
 
@@ -36,6 +39,9 @@ public class CallBackServiceImpl implements CallbackRequestService {
     private final CallbackRequestMapper callbackRequestMapper;
     private final EmailService emailService;
     private final CallbackRequestMapper callbackMapper;
+    @Value("${admin.email}")
+    private String adminEmail;
+
 
     @Override
     public CallbackResponseDTO submitRequest(String token, CallbackRequestDTO dto) {
@@ -44,7 +50,7 @@ public class CallBackServiceImpl implements CallbackRequestService {
         try {
             // ✅ Extract email from token
             String email = jwtService.extractUsername(token);
-            log.debug("Extracted email from JWT token: {}", email);
+
 
             // ✅ Fetch user
             User user = userRepo.findByEmail(email)
@@ -52,7 +58,6 @@ public class CallBackServiceImpl implements CallbackRequestService {
                         log.warn("User not found with email: {}", email);
                         return new UsernameNotFoundException("User not found");
                     });
-            log.info("User found - ID: {}, Name: {}, Email: {}", user.getId(), user.getName(), user.getEmail());
 
             // ✅ Fetch cart
             Cart cart = cartRepo.findByUserId(user.getId())
@@ -60,7 +65,6 @@ public class CallBackServiceImpl implements CallbackRequestService {
                         log.warn("Cart not found for user ID: {}", user.getId());
                         return new RuntimeException("Cart not found for user: " + email);
                     });
-            log.debug("Cart retrieved - Items count: {}, Total price: ₹{}", cart.getItems().size(), cart.getTotalPrice());
 
             // ✅ Save callback request
             CallbackRequest callback = CallbackRequest.builder()
@@ -75,7 +79,6 @@ public class CallBackServiceImpl implements CallbackRequestService {
                     .build();
 
             callbackRepository.save(callback);
-            log.info("Callback request saved successfully - Request ID: {}", callback.getId());
 
             // ✅ Convert cart items for response
             List<CartItemDTO> itemDTOs = cart.getItems().stream()
@@ -87,10 +90,8 @@ public class CallBackServiceImpl implements CallbackRequestService {
                             .imageUrl(item.getImageUrl())
                             .build())
                     .toList();
-            log.debug("Converted {} cart items to DTOs for response", itemDTOs.size());
 
             // ✅ Prepare admin email
-            log.debug("Preparing admin notification email content");
             StringBuilder cartItemsTable = new StringBuilder();
             cartItemsTable.append("""
     <table style="width:100%; border-collapse: collapse; margin-top:15px;">
@@ -156,7 +157,7 @@ public class CallBackServiceImpl implements CallbackRequestService {
             // ✅ Send admin email with HTML
             try {
                 emailService.sendHtmlEmail(
-                        "abhinavdecide@gmail.com",
+                        adminEmail,
                         "📞 Callback Request - " + user.getName(),
                         adminEmailBody
                 );
