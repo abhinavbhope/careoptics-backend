@@ -279,7 +279,7 @@ public class EyeTestServiceImpl implements EyeTestService {
                 "    <p>A new eye test record has been added to your profile by our CareOptics team.</p>" +
                 "    <p><b>Test Date:</b> " + LocalDate.now() + "</p>" +
                 "    <p>Please log in to your account to check the results under <b>My Eye Tests</b>.</p>" +
-                "    <a class='button' href='https://your-frontend-domain.com/login'>View My Profile</a>" +
+                "    <a class='button' href='https://careoptics.vercel.app/profile'>View My Profile</a>" +
                 "    <div class='footer'>CareOptics &copy; " + LocalDate.now().getYear() + " | All rights reserved</div>" +
                 "  </div>" +
                 "</body>" +
