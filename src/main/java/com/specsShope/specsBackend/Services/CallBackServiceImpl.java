@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 
 
 @Slf4j
@@ -39,8 +38,27 @@ public class CallBackServiceImpl implements CallbackRequestService {
     private final CallbackRequestMapper callbackRequestMapper;
     private final EmailService emailService;
     private final CallbackRequestMapper callbackMapper;
-    @Value("${admin.email}")
-    private String adminEmail;
+    private final String adminEmail;
+
+    public CallBackServiceImpl(
+            JwtService jwtService,
+            CartRepo cartRepo,
+            CallbackRepository callbackRepository,
+            UserRepo userRepo,
+            CallbackRequestMapper callbackRequestMapper,
+            EmailService emailService,
+            CallbackRequestMapper callbackMapper,
+            @Value("${admin.email}") String adminEmail
+    ) {
+        this.jwtService = jwtService;
+        this.cartRepo = cartRepo;
+        this.callbackRepository = callbackRepository;
+        this.userRepo = userRepo;
+        this.callbackRequestMapper = callbackRequestMapper;
+        this.emailService = emailService;
+        this.callbackMapper = callbackMapper;
+        this.adminEmail = adminEmail;
+    }
 
 
     @Override
