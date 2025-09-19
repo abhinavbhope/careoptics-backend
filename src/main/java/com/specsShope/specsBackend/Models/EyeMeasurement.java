@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class EyeMeasurement {
     private Double sph;
     private Double cyl;
-    private int axis;
+    private Integer axis;
     private Double add;
     private String vision; // e.g., "6/6" or "N6"
 }
