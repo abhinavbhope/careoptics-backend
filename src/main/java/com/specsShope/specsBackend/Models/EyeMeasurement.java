@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EyeMeasurement {
-    private double sph;
-    private double cyl;
+    private Double sph;
+    private Double cyl;
     private int axis;
     private Double add;
     private String vision; // e.g., "6/6" or "N6"
