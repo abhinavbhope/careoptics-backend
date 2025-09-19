@@ -109,25 +109,28 @@ public class EyeTestMapper {
     /* ==================================================================
        5.  MEASUREMENT HELPERS
        ================================================================== */
+/* ==================================================================
+   5.  MEASUREMENT HELPERS (NULL-SAFE)
+   ================================================================== */
     public static EyeMeasurement toEntity(EyeMeasurementDTO dto) {
         if (dto == null) return null;
         return EyeMeasurement.builder()
-                .sph(dto.getSph())
-                .cyl(dto.getCyl())
-                .axis(dto.getAxis())
-                .add(dto.getAdd())
-                .vision(dto.getVision())
+                .sph(dto.getSph() != null ? dto.getSph() : null)
+                .cyl(dto.getCyl() != null ? dto.getCyl() : null)
+                .axis(dto.getAxis() != null ? dto.getAxis() : null)
+                .add(dto.getAdd() != null ? dto.getAdd() : null)
+                .vision(dto.getVision() != null ? dto.getVision() : null)
                 .build();
     }
 
     private static EyeMeasurementDTO toDTO(EyeMeasurement entity) {
         if (entity == null) return null;
         return EyeMeasurementDTO.builder()
-                .sph(entity.getSph())
-                .cyl(entity.getCyl())
-                .axis(entity.getAxis())
-                .add(entity.getAdd())
-                .vision(entity.getVision())
+                .sph(entity.getSph() != null ? entity.getSph() : null)
+                .cyl(entity.getCyl() != null ? entity.getCyl() : null)
+                .axis(entity.getAxis() != null ? entity.getAxis() : null)
+                .add(entity.getAdd() != null ? entity.getAdd() : null)
+                .vision(entity.getVision() != null ? entity.getVision() : null)
                 .build();
     }
 
